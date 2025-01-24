@@ -15,7 +15,6 @@ import DSAQuestions from './pages/DSAQestions';
 import ResumeBuilder from './components/ResumeBuilder';
 import Chatbot from './components/Chatbot';
 import Login from './pages/Login';
-import Signup from './pages/SignUp';
 
 const App = () => {
   return (
@@ -36,7 +35,7 @@ const App = () => {
             <Route path="/dsa-practice" element={<DSAQuestions />} />
             <Route path="/resume-builder" element={<ResumeBuilder />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+            
           </Routes>
         </main>
         <Footer />
