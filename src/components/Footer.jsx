@@ -1,5 +1,5 @@
 import React from 'react';
-import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin, LogIn } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -22,6 +22,7 @@ const Footer = () => {
             <li><a href="/jobs" className="hover:text-indigo-400">Job Listings</a></li>
             <li><a href="/learning" className="hover:text-indigo-400">Learning Path</a></li>
             <li><a href="/profile" className="hover:text-indigo-400">My Profile</a></li>
+            <li><a href="/login" className="hover:text-indigo-400 flex items-center"><LogIn className="h-4 w-4 mr-2" /> Login</a></li>
           </ul>
         </div>
 

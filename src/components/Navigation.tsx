@@ -68,6 +68,13 @@ const Navigation = () => {
               text="Insights"
               active={location.pathname === "/insights"}
             />
+            {/* Add Login Link */}
+            <NavLink
+              to="/login"
+              icon={<LogIn className="h-5 w-5" />}
+              text="Login"
+              active={location.pathname === "/login"}
+            />
           </div>
           <div className="flex items-center space-x-4">
             <Link
@@ -124,6 +131,13 @@ const Navigation = () => {
               icon={<BarChart className="h-5 w-5" />}
               text="Insights"
               active={location.pathname === "/insights"}
+            />
+            {/* Add Login Link in Mobile Menu */}
+            <NavLink
+              to="/login"
+              icon={<LogIn className="h-5 w-5" />}
+              text="Login"
+              active={location.pathname === "/login"}
             />
           </div>
         )}
