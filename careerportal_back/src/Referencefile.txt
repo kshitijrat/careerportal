@@ -1,0 +1,162 @@
+To design a normalized database schema for the user profile page, you need to identify entities that represent the user profile and its related information. The goal of normalization is to remove redundancy and ensure that data is organized in such a way that it can be efficiently updated and queried.
+
+Here's a suggestion for the entities and attributes based on the profile page you shared:
+
+### 1. **User**
+This entity will store basic information about the user. 
+
+**Attributes:**
+- `user_id` (Primary Key)
+- `first_name`
+- `last_name`
+- `email`
+- `phone`
+- `location`
+- `title` (e.g., Senior Full Stack Developer)
+- `about` (short description)
+- `avatar_url` (profile image URL)
+- `profile_completion` (percentage of profile completion)
+
+---
+
+### 2. **Skills**
+The `Skills` entity represents the skills of a user. This entity will allow a user to have multiple skills.
+
+**Attributes:**
+- `skill_id` (Primary Key)
+- `user_id` (Foreign Key referencing `User`)
+- `skill_name`
+- `proficiency_level` (e.g., Beginner, Intermediate, Advanced)
+- `experience_years` (number of years the user has been working with the skill)
+
+---
+
+### 3. **Education**
+The `Education` entity will store information about the user's educational background.
+
+**Attributes:**
+- `education_id` (Primary Key)
+- `user_id` (Foreign Key referencing `User`)
+- `degree_name` (e.g., Bachelor's in Computer Science)
+- `institution_name`
+- `graduation_year`
+- `field_of_study`
+- `location`
+
+---
+
+### 4. **Certifications**
+This entity will store the certifications that a user has achieved.
+
+**Attributes:**
+- `certification_id` (Primary Key)
+- `user_id` (Foreign Key referencing `User`)
+- `certification_name`
+- `issuing_organization`
+- `issue_date`
+- `expiry_date` (nullable)
+- `certification_url` (URL to verify certification)
+
+---
+
+### 5. **JobExperience**
+The `JobExperience` entity stores work experience details for the user.
+
+**Attributes:**
+- `job_experience_id` (Primary Key)
+- `user_id` (Foreign Key referencing `User`)
+- `company_name`
+- `position_title`
+- `start_date`
+- `end_date` (nullable, use `NULL` if currently working there)
+- `responsibilities` (optional: a brief summary of job responsibilities)
+
+---
+
+### 6. **Progress**
+This entity will track the user's profile and career progress over time, such as their skills and achievements.
+
+**Attributes:**
+- `progress_id` (Primary Key)
+- `user_id` (Foreign Key referencing `User`)
+- `progress_type` (e.g., Profile Completion, Career Growth)
+- `progress_value` (e.g., 70% for profile completion, job market statistics)
+- `progress_date`
+
+---
+
+### 7. **Resume**
+If you're allowing users to create resumes on the platform, this entity will store the resume data.
+
+**Attributes:**
+- `resume_id` (Primary Key)
+- `user_id` (Foreign Key referencing `User`)
+- `resume_title` (e.g., "Resume - Kshitij Ratnawat")
+- `file_url` (URL to the resume document)
+- `created_at` (timestamp)
+- `updated_at` (timestamp)
+
+---
+
+### 8. **SocialMedia**
+This entity stores the links to the user's social media accounts.
+
+**Attributes:**
+- `social_media_id` (Primary Key)
+- `user_id` (Foreign Key referencing `User`)
+- `platform_name` (e.g., LinkedIn, GitHub, Twitter)
+- `profile_url` (URL to the user's profile on the platform)
+
+---
+
+### 9. **UserActions**
+This entity stores user interactions or activities, such as viewing a profile or completing a profile field.
+
+**Attributes:**
+- `action_id` (Primary Key)
+- `user_id` (Foreign Key referencing `User`)
+- `action_type` (e.g., "Profile Edit", "Resume Build")
+- `action_date` (timestamp)
+
+---
+
+### 10. **ProfileViews**
+This entity can store information about who viewed the user's profile.
+
+**Attributes:**
+- `view_id` (Primary Key)
+- `user_id` (Foreign Key referencing `User`)
+- `viewer_user_id` (Foreign Key referencing `User`)
+- `view_date` (timestamp)
+
+---
+
+### 11. **UserSettings**
+This entity can store preferences or settings related to the user profile.
+
+**Attributes:**
+- `setting_id` (Primary Key)
+- `user_id` (Foreign Key referencing `User`)
+- `setting_name` (e.g., "Theme", "Notification Preference")
+- `setting_value` (e.g., "Dark", "Email Notifications Enabled")
+
+---
+
+### **Relationships Between Entities:**
+1. **User ↔ Skills:** One-to-many relationship (One user can have multiple skills).
+2. **User ↔ Education:** One-to-many relationship (One user can have multiple educational qualifications).
+3. **User ↔ Certifications:** One-to-many relationship (One user can have multiple certifications).
+4. **User ↔ JobExperience:** One-to-many relationship (One user can have multiple job experiences).
+5. **User ↔ SocialMedia:** One-to-many relationship (One user can have multiple social media links).
+6. **User ↔ Resume:** One-to-many relationship (A user can have multiple resumes).
+7. **User ↔ Progress:** One-to-many relationship (A user can have multiple progress entries).
+8. **User ↔ ProfileViews:** One-to-many relationship (A user can have multiple views).
+
+This schema ensures that there is no redundancy of data and that all information is linked through foreign keys, allowing for easy updates and queries.
+
+### Normalization
+- **1NF (First Normal Form):** Each table contains atomic (indivisible) values, ensuring that attributes like skills, education, certifications, etc., do not contain multiple values in a single column.
+- **2NF (Second Normal Form):** All non-key attributes depend on the entire primary key (for example, `job_experience` details depend on `user_id` and `job_experience_id`).
+- **3NF (Third Normal Form):** There are no transitive dependencies (e.g., no attributes depend on other non-key attributes).
+
+This structure will help ensure your data is clean, efficient, and scalable as you expand your platform!

@@ -1,75 +1,78 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const Signup = () => {
+export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      alert("Passwords don't match!");
-      return;
+
+    const signupData = { email, password };
+    setLoading(true);
+
+    try {
+      const response = await fetch('http://localhost:8080/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(signupData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('token', data.jwt); // Save token for authentication
+        alert(data.message);
+        navigate('/dashboard'); // Redirect to dashboard
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message);
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again.',err);
+    } finally {
+      setLoading(false);
     }
-    // Handle signup logic here (e.g., API call for registration)
-    console.log('Signing up with:', { email, password });
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center">Sign Up</h1>
-
-      <form onSubmit={handleSubmit} className="bg-white rounded-lg p-6 shadow-md">
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-semibold mb-2">
-            Email Address
-          </label>
-          <input
-            type="email"
-            id="email"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-
-        <div className="mb-4">
-          <label htmlFor="password" className="block text-sm font-semibold mb-2">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-
-        <div className="mb-4">
-          <label htmlFor="confirmPassword" className="block text-sm font-semibold mb-2">
-            Confirm Password
-          </label>
-          <input
-            type="password"
-            id="confirmPassword"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-            placeholder="Confirm your password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold"
-        >
-          Sign Up
-        </button>
-
-        <div className="mt-4 text-center">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        <form onSubmit={handleSignup}>
+          <div className="mb-4">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full p-2 mt-1 border border-gray-300 rounded-md"
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full p-2 mt-1 border border-gray-300 rounded-md"
+            />
+          </div>
+          <button
+            type="submit"
+            className={`w-full py-2 ${loading ? 'bg-gray-400' : 'bg-blue-500'} text-white rounded-md`}
+            disabled={loading}
+          >
+            {loading ? 'Signing Up...' : 'Sign Up'}
+          </button>
+          <div className="mt-4 text-center">
           <p className="text-sm">
             Already have an account?{' '}
             <a href="/login" className="text-blue-500 hover:underline">
@@ -77,9 +80,9 @@ const Signup = () => {
             </a>
           </p>
         </div>
-      </form>
+        </form>
+
+      </div>
     </div>
   );
-};
-
-export default Signup;
+}

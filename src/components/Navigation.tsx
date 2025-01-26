@@ -1,20 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, Home, BookOpen, Briefcase, Award, Users, BarChart, User, Code, LogIn, UserPlus, Settings, LogOut, Star } from "lucide-react";
+import { Menu, Home, BookOpen, Code, Briefcase, Award, Users, BarChart, LogIn, User, LogOut } from "lucide-react"; // Icons
 
-const Navigation = () => {
+const Navigation = ({ isMenuOpen, toggleMenu }) => {
   const location = useLocation();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsMenuOpen((prev) => !prev);
-  };
 
   return (
     <nav className="bg-indigo-600 text-white sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
+            {/* Menu Toggle Button */}
             <button
               className="md:hidden mr-4 focus:outline-none"
               onClick={toggleMenu}
@@ -25,6 +21,8 @@ const Navigation = () => {
               CareerBoost
             </Link>
           </div>
+
+          {/* Desktop Links */}
           <div className={`md:flex space-x-8 hidden`}>
             <NavLink
               to="/"
@@ -68,15 +66,12 @@ const Navigation = () => {
               text="Insights"
               active={location.pathname === "/insights"}
             />
-            {/* Add Login Link */}
             <NavLink
               to="/login"
               icon={<LogIn className="h-5 w-5" />}
               text="Login"
               active={location.pathname === "/login"}
             />
-          </div>
-          <div className="flex items-center space-x-4">
             <Link
               to="/profile"
               className="hover:text-indigo-200"
@@ -132,7 +127,6 @@ const Navigation = () => {
               text="Insights"
               active={location.pathname === "/insights"}
             />
-            {/* Add Login Link in Mobile Menu */}
             <NavLink
               to="/login"
               icon={<LogIn className="h-5 w-5" />}

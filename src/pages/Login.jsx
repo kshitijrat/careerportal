@@ -1,19 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { login } = useContext(AuthContext); // Use login function from context
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here (e.g., API call for login)
-    console.log('Logging in with:', { email, password });
+    try {
+      const response = await fetch("http://localhost:8080/auth/login", {
+        method: "POST", // Ensure method is POST
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });     
+
+      if (response.ok) {
+        const data = await response.json();
+        login(data.jwt); // Save token in context
+        console.log("token: ",data.jwt);
+        navigate("/dashboard");
+      } else {
+        console.error("Login failed!");
+        const errorText = await response.text();
+        console.error("Error response:", errorText); // Log unexpected HTML or error text
+        throw new Error("Login failed");
+      }
+    } catch (err) {
+      console.error("Error during login:", err);
+    }
   };
 
   return (
     <div className="max-w-md mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8 text-center">Login</h1>
-
       <form onSubmit={handleSubmit} className="bg-white rounded-lg p-6 shadow-md">
         <div className="mb-4">
           <label htmlFor="email" className="block text-sm font-semibold mb-2">
@@ -26,6 +48,7 @@ const Login = () => {
             placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
 
@@ -40,6 +63,7 @@ const Login = () => {
             placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
 
@@ -49,15 +73,6 @@ const Login = () => {
         >
           Login
         </button>
-
-        <div className="mt-4 text-center">
-          <p className="text-sm">
-            Don't have an account?{' '}
-            <a href="/signup" className="text-blue-500 hover:underline">
-              Sign up here
-            </a>
-          </p>
-        </div>
       </form>
     </div>
   );
